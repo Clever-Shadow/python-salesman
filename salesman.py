@@ -1,36 +1,44 @@
+"""
+Salesman
+---
+Решает задачу коммивояжера, заданную матрицей в файле,
+и выводит решение в терминал.
+"""
+
 def read_matrix(path):
+    """Чтение матрицы из файла."""
     matrix = []
-    with open(path, 'r') as file:
+    with open(path, 'r', encoding='utf-8') as file:
         source = file.read().split('\n')
     for i in source:
         line = list(map(int, i.split()))
         matrix.append(line)
     return matrix
 
-# Функция нахождения минимального элемента, исключая текущий элемент
 def minimal(lst, myindex):
+    """Находит минимальный элемент, исключая текущий."""
     return min(x for idx, x in enumerate(lst) if idx != myindex)
 
-# функция удаления нужной строки и столбцах
 def delete_item(mtrx, index1, index2):
+    """Удаляет нужные строку и столбцец."""
     del mtrx[index1]
     for i in mtrx:
         del i[index2]
     return mtrx
 
-# Функция вывода матрицы
 def print_matrix(matrix, separator):
-    """Печатает матрицу"""
+    """Печатает матрицу в терминал."""
     print(separator)
     for i in range(len(matrix)):
         print('\t'.join([str(j) if j != 0 else '-' for j in matrix[i]]))
     print(separator)
 
 def main(path: str):
+    """Главная функция, выполняющая алгоритм решения задачи."""
     h = 0
     path_length = 0
-    Str = []
-    Stb = []
+    row_indexes = []
+    column_indexes = []
     res = []
     result = []
     start_matrix = []
@@ -44,8 +52,8 @@ def main(path: str):
 
     # Инициализируем массивы для сохранения индексов
     for i in range(n):
-        Str.append(i)
-        Stb.append(i)
+        row_indexes.append(i)
+        column_indexes.append(i)
 
     # Сохраняем изначальную матрицу
     for i in range(n):
@@ -86,17 +94,17 @@ def main(path: str):
                         index_2 = j
 
         # Находим нужный нам путь, записываем его в res и удаляем все ненужное
-        res.append(Str[index_1]+1)
-        res.append(Stb[index_2]+1)
+        res.append(row_indexes[index_1]+1)
+        res.append(column_indexes[index_2]+1)
 
-        old_index_1 = Str[index_1]
-        old_index_2 = Stb[index_2]
-        if old_index_2 in Str and old_index_1 in Stb:
-            new_index_1 = Str.index(old_index_2)
-            new_index_2 = Stb.index(old_index_1)
+        old_index_1 = row_indexes[index_1]
+        old_index_2 = column_indexes[index_2]
+        if old_index_2 in row_indexes and old_index_1 in column_indexes:
+            new_index_1 = row_indexes.index(old_index_2)
+            new_index_2 = column_indexes.index(old_index_1)
             matrix[new_index_1][new_index_2] = float('inf')
-        del Str[index_1]
-        del Stb[index_2]
+        del row_indexes[index_1]
+        del column_indexes[index_2]
         matrix = delete_item(matrix, index_1, index_2)
         if len(matrix) == 1:
             break
